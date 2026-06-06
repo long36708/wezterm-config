@@ -7,11 +7,11 @@ local options = {
 }
 
 if platform.is_win then
-   -- 方式1: 使用完整路径(当前设置)
-   options.default_prog = { 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\nu\\bin\\nu.exe' }
+   -- Nushell 作为默认 Shell (CTF 工作环境)
+   options.default_prog = { 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\nu\\bin\\nu.exe', '-l' }
 
    -- 方式2: 如果 nu 已在系统 PATH 中,可以简化为:
-   -- options.default_prog = { 'nu' }
+   -- options.default_prog = { 'nu', '-l' }
 
    -- 构建 WSL 启动菜单
    local wsl_items = {}

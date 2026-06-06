@@ -279,6 +279,21 @@ local mouse_bindings = {
       mods = 'NONE',
       action = act.ScrollByCurrentEventWheelDelta,
    },
+   -- 右键复制粘贴 (智能判断:有选中则复制,无选中则粘贴)
+   {
+      event = { Down = { streak = 1, button = 'Right' } },
+      mods = 'NONE',
+      action = wezterm.action_callback(function(window, pane)
+         local has_selection = window:get_selection_text_for_pane(pane) ~= ''
+         if has_selection then
+            -- 有选中文本,复制到剪贴板
+            window:perform_action(act.CopyTo('ClipboardAndPrimarySelection'), pane)
+         else
+            -- 没有选中,粘贴
+            window:perform_action(act.PasteFrom('Clipboard'), pane)
+         end
+      end),
+   },
 }
 
 return {
