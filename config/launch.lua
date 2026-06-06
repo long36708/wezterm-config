@@ -7,8 +7,12 @@ local options = {
 }
 
 if platform.is_win then
-   options.default_prog = { 'powershell' }
-   
+   -- 方式1: 使用完整路径(当前设置)
+   options.default_prog = { 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\nu\\bin\\nu.exe' }
+
+   -- 方式2: 如果 nu 已在系统 PATH 中,可以简化为:
+   -- options.default_prog = { 'nu' }
+
    -- 构建 WSL 启动菜单
    local wsl_items = {}
    for _, distro in ipairs(prefs.wsl_distros) do
@@ -17,29 +21,29 @@ if platform.is_win then
          args = { 'wsl', '-d', distro.name },
       })
    end
-   
+
    -- 合并启动菜单
    options.launch_menu = {
       { label = 'PowerShell', args = { 'powershell' } },
       { label = 'Cmd', args = { 'cmd' } },
-      { label = 'Nushell', args = { 'nu' } },
+      { label = 'Nushell', args = { 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\nu\\bin\\nu.exe' } },
       {
          label = 'Git Bash',
          args = { 'D:\\software\\GIT\\Git\\bin\\bash.exe' },
       },
    }
-   
+
    -- 添加 WSL 选项
    for _, item in ipairs(wsl_items) do
       table.insert(options.launch_menu, item)
    end
-   
+
    -- 添加其他选项
    table.insert(options.launch_menu, {
       label = '虚拟机',
-      args = { 'ssh', 'tongwz@192.168.56.101'},
+      args = { 'ssh', 'longmo@192.168.56.101'},
    })
-   
+
 elseif platform.is_mac then
    options.default_prog = { '/opt/homebrew/bin/fish' }
    options.launch_menu = {

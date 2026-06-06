@@ -5,37 +5,32 @@ local wezterm = require('wezterm')
 
 local M = {}
 
+-- 记录启动时间
+local start_time = os.time()
+
 -- 性能数据
 local perf_data = {
-   fps = 0,
-   frame_time = 0,
+   fps = 60,
+   frame_time = 16.67,
    uptime = 0,
    tab_count = 0,
    pane_count = 0,
 }
 
--- 更新间隔(毫秒)
-local UPDATE_INTERVAL = 1000
-local last_update = 0
-
 --- 获取性能数据
 M.get_perf_data = function()
-   local now = wezterm.time.now()
-   
-   -- 计算运行时间
-   perf_data.uptime = math.floor(now / 1000)
+   -- 计算运行时间(秒)
+   perf_data.uptime = os.time() - start_time
    
    -- 统计标签页和窗格
    local tabs = 0
    local panes = 0
    
-   local mux = wezterm.mux
-   for _, domain in ipairs(mux.all_domains()) do
-      for _, window in ipairs(domain:all_windows()) do
-         for _, tab in ipairs(window:tabs_with_info()) do
-            tabs = tabs + 1
-            panes = panes + #tab.tab:panes()
-         end
+   -- 遍历所有窗口
+   for _, window in ipairs(wezterm.mux.all_windows()) do
+      for _, tab_info in ipairs(window:tabs_with_info()) do
+         tabs = tabs + 1
+         panes = panes + #tab_info.tab:panes()
       end
    end
    
@@ -77,13 +72,9 @@ M.render_panel = function(window, pane)
    local text = M.format_perf_text()
    
    -- 创建覆盖层
-   local overlay = wezterm.overlay.new(function(domain, win)
-      return {
-         { Text = text },
-      }
-   end)
-   
-   window:perform_action(act.ShowOverlay(overlay), nil)
+   window:perform_action(act.ShowOverlay(wezterm.format({
+      { Text = text },
+   })))
 end
 
 --- 在状态栏显示简化性能信息

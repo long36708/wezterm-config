@@ -61,17 +61,10 @@ end
 
 --- 显示主题选择器
 M.show_theme_selector = function(window)
-   local elements = {}
-   
-   for _, option in ipairs(theme_options) do
-      table.insert(elements, {
-         label = option.label,
-         action = act.Multiple({
-            act.EmitEvent('wizard.theme.selected', { theme = option.value }),
-         }),
-      })
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then return end
    end
-   
    window:perform_action(act.InputSelector({
       action = wezterm.action_callback(function(win, pane, id, label)
          if label then
@@ -92,7 +85,7 @@ M.show_theme_selector = function(window)
          end
          return choices
       end)(),
-   })), nil)
+   }))
 end
 
 --- 应用主题
@@ -102,13 +95,9 @@ M.apply_theme = function(window, theme)
       prefs.theme = theme
       
       -- 显示确认信息
-      window:perform_action(act.ShowOverlay(wezterm.overlay.new(function(domain, window)
-         return wezterm.gui.window_appearance().theme == 'Dark' and {
-            { Text = string.format("✅ 主题已切换为: %s", theme) },
-         } or {
-            { Text = string.format("✅ 主题已切换为: %s", theme) },
-         }
-      end)), nil)
+      window:perform_action(act.ShowOverlay(wezterm.format({
+         { Text = string.format("✅ 主题已切换为: %s\n请手动保存到配置文件", theme) },
+      })))
       
       wezterm.log_info(string.format("主题已切换为: %s (请手动保存到配置文件)", theme))
    end
@@ -116,6 +105,10 @@ end
 
 --- 显示字体选择器
 M.show_font_selector = function(window)
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then return end
+   end
    window:perform_action(act.InputSelector({
       action = wezterm.action_callback(function(win, pane, id, label)
          if label then
@@ -136,7 +129,7 @@ M.show_font_selector = function(window)
          end
          return choices
       end)(),
-   })), nil)
+   }))
 end
 
 --- 应用字体
@@ -149,7 +142,14 @@ M.apply_font = function(window, font_family)
 end
 
 --- 显示主菜单
-M.show_main_menu = function(window)
+M.show_main_menu = function(window, pane)
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then
+         wezterm.log_error("无法获取当前窗口")
+         return
+      end
+   end
    window:perform_action(act.InputSelector({
       action = wezterm.action_callback(function(win, pane, id, label)
          if not label then return end
@@ -175,11 +175,15 @@ M.show_main_menu = function(window)
          { label = "✅ 验证配置", id = "validate" },
          { label = "📊 快捷键冲突检测", id = "check" },
       },
-   })), nil)
+   }))
 end
 
 --- 显示当前配置
 M.show_current_config = function(window)
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then return end
+   end
    local prefs = M.load_current_config()
    if not prefs then return end
    
@@ -199,35 +203,37 @@ M.show_current_config = function(window)
       tostring(prefs.use_fancy_tab_bar or false)
    )
    
-   window:perform_action(act.ShowOverlay(wezterm.overlay.new(function(domain, window)
-      return {
-         { Text = config_text },
-      }
-   end)), nil)
+   window:perform_action(act.ShowOverlay(wezterm.format({
+      { Text = config_text },
+   })))
 end
 
 --- 验证配置
 M.validate_config = function(window)
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then return end
+   end
    local validator = require('utils.config_validator')
    local result = validator.run_validation()
    
-   window:perform_action(act.ShowOverlay(wezterm.overlay.new(function(domain, win)
-      return {
-         { Text = result.report },
-      }
-   end)), nil)
+   window:perform_action(act.ShowOverlay(wezterm.format({
+      { Text = result.report },
+   })))
 end
 
 --- 检查快捷键冲突
 M.check_keybinds = function(window)
+   if not window then
+      window = wezterm.gui.gui_window()
+      if not window then return end
+   end
    local checker = require('utils.keybind_checker')
    local conflicts, report = checker.run_check()
    
-   window:perform_action(act.ShowOverlay(wezterm.overlay.new(function(domain, win)
-      return {
-         { Text = report },
-      }
-   end)), nil)
+   window:perform_action(act.ShowOverlay(wezterm.format({
+      { Text = report },
+   })))
 end
 
 --- 注册事件处理器

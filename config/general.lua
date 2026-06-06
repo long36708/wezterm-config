@@ -2,7 +2,7 @@ return {
    -- behaviours
    automatically_reload_config = true,
    check_for_updates = false,
-   exit_behavior = 'CloseOnCleanExit', -- if the shell program exited with a successful status
+   exit_behavior = 'Close', -- 关闭窗口时不显示退出消息
    status_update_interval = 1000,
 
    -- scrollbar
