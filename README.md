@@ -79,7 +79,7 @@ $HOME\.config\wezterm
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/your-username/wezterm-config.git ~/.config/wezterm
+git clone https://github.com/long36708/wezterm-config.git ~/.config/wezterm
 
 # 2. WezTerm 会自动加载配置
 ```
