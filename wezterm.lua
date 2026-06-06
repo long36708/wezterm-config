@@ -7,6 +7,7 @@ require('events.new-tab-button').setup()
 require('events.gui-startup').setup() -- 窗口启动事件
 require('events.config-wizard').setup() -- 配置向导
 require('events.performance-monitor').setup() -- 性能监控
+require('events.command-palette-enhanced').setup() -- 增强命令面板(中文)
 
 return Config:init()
    :append(require('config.appearance'))

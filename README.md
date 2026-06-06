@@ -7,8 +7,8 @@
 
 ### ✨ 核心特性
 
-- 🎨 **美观的 UI**: Gruvbox 主题 + Catppuccin 配色方案
-- ⌨️ **丰富的快捷键**: 支持窗格管理、标签切换、字体调整等
+- 🎨 **多主题支持**: Gruvbox / Catppuccin / Dracula / One Dark (一键切换)
+- ⌨️ **丰富的快捷键**: 窗格管理、标签切换、字体调整等
 - 🔧 **模块化设计**: 清晰的配置分离,易于维护和扩展
 - 💻 **跨平台支持**: 自动适配 Windows/macOS/Linux
 - 🎯 **自定义标签栏**: 显示进程名、管理员标识、未读提醒
@@ -51,9 +51,12 @@ wezterm/
 ## 🛠️ 技术栈
 
 - **配置语言**: Lua (WezTerm 原生配置语言)
-- **字体**: JetBrains Mono
-- **主题**: Gruvbox dark, medium (base16)
-- **配色**: Catppuccin Mocha (定制版)
+- **字体**: JetBrains Mono Nerd Font
+- **主题**: 
+  - Gruvbox Dark (暖色调复古风格)
+  - Catppuccin Mocha (紫色调现代风格)
+  - Dracula (深蓝色调高对比度)
+  - One Dark (Atom 编辑器风格)
 - **图标**: Nerd Fonts (Unicode 特殊字符)
 - **渲染后端**: WebGPU / OpenGL
 
@@ -96,7 +99,7 @@ git clone https://github.com/long36708/wezterm-config.git ~/.config/wezterm
 
 ```lua
 return {
-   theme = "gruvbox",          -- 或 "catppuccin"
+   theme = "gruvbox",          -- 或 "catppuccin" | "dracula" | "one_dark"
    font_family = "jetbrains",  -- 或 "caskaydia", "fira_code"
    window_startup = "default", -- 或 "centered", "maximized"
    wsl_distros = {             -- 自定义 WSL 发行版
@@ -105,6 +108,35 @@ return {
    },
 }
 ```
+
+#### 🔄 快速切换主题 (三种方式)
+
+**方式1: F2 命令面板 (推荐)** ⭐
+```
+1. 按 F2 打开命令面板
+2. 输入 "gruv" → 选择 "🎨 切换到 Gruvbox"
+3. 按回车 → 立即切换!
+```
+
+可用选项:
+- `🎨 切换到 Gruvbox` - 暖色调复古风格
+- `🎨 切换到 Catppuccin` - 紫色调现代风格
+- `🎨 切换到 Dracula` - 深蓝色调高对比度
+- `🎨 切换到 One Dark` - Atom 编辑器风格
+
+**方式2: 快捷键循环切换**
+```
+按 Ctrl+Shift+T 循环切换主题
+顺序: gruvbox → catppuccin → dracula → one_dark → gruvbox → ...
+```
+
+**方式3: 修改配置文件**
+```lua
+-- 编辑 config/user_preferences.lua
+theme = "dracula"  -- 修改为你喜欢的主题
+```
+
+> 💡 **提示**: 使用 F2 或快捷键切换后,配置会自动保存到文件,永久生效!
 
 详细说明请查看 [CONFIG_GUIDE.md](CONFIG_GUIDE.md)
 
@@ -119,6 +151,9 @@ return {
 | `Shift+Insert` | 粘贴    |
 | `F11`          | 全屏切换  |
 | `Ctrl+Shift+R` | 重命名标签 |
+| `Ctrl+Shift+T` | **循环切换主题** ⭐ |
+
+> 💡 **提示**: 按 `Ctrl+Shift+T` 可快速在 4 个主题间循环切换
 
 ### 标签页管理
 
@@ -178,6 +213,19 @@ return {
 | `F12`   | 调试控制台  |
 | `Alt+F` | 搜索文本   |
 | `Alt+N` | 新建窗口   |
+
+#### F2 命令面板快捷入口
+
+按 `F2` 后可直接输入关键词快速访问:
+
+| 输入关键词 | 功能                |
+|---------|-------------------|
+| `gruv`  | 🎨 切换到 Gruvbox    |
+| `catp`  | 🎨 切换到 Catppuccin |
+| `drac`  | 🎨 切换到 Dracula    |
+| `one`   | 🎨 切换到 One Dark   |
+| `配置`   | ⚙️ 打开配置向导        |
+| `验证`   | ✅ 验证配置文件        |
 
 ### 鼠标操作
 

@@ -33,6 +33,13 @@ local keys = {
    { key = 't',      mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
    { key = 'w',      mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
+   -- tabs: Chrome 风格快捷键 (新增)
+   { key = 't',      mods = 'CTRL',        action = act.SpawnTab('CurrentPaneDomain') }, -- Ctrl+T 新建标签
+   { key = 'w',      mods = 'CTRL',        action = act.CloseCurrentTab({ confirm = true }) }, -- Ctrl+W 关闭标签
+   { key = 'Tab',    mods = 'CTRL',        action = act.ActivateTabRelative(1) }, -- Ctrl+Tab 下一个标签
+   { key = 'Tab',    mods = 'CTRL|SHIFT',  action = act.ActivateTabRelative(-1) }, -- Ctrl+Shift+Tab 上一个标签
+   -- 注意: WezTerm 不支持恢复最近关闭的标签功能
+
    -- tabs: navigation
    { key = '[',      mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
    { key = ']',      mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
@@ -126,6 +133,56 @@ local keys = {
             end
          end),
       }),
+   },
+   
+   -- 快速切换主题 (Ctrl+Shift+Y 循环切换,避免与恢复标签冲突)
+   {
+      key = 'Y',
+      mods = 'CTRL|SHIFT',
+      action = wezterm.action_callback(function(window, pane)
+         local themes = { 'gruvbox', 'catppuccin', 'dracula', 'one_dark' }
+         local prefs = require('config.user_preferences')
+         local current_theme = prefs.theme or 'gruvbox'
+         
+         -- 找到当前主题的索引
+         local current_index = 1
+         for i, theme in ipairs(themes) do
+            if theme == current_theme then
+               current_index = i
+               break
+            end
+         end
+         
+         -- 切换到下一个主题(循环)
+         local next_index = (current_index % #themes) + 1
+         local next_theme = themes[next_index]
+         
+         -- 获取配置文件路径并写入
+         local config_dir = wezterm.config_dir
+         local prefs_file = config_dir .. '/config/user_preferences.lua'
+         
+         local file = io.open(prefs_file, 'r')
+         if file then
+            local content = file:read('*all')
+            file:close()
+            
+            -- 替换主题配置
+            content = content:gsub('(theme%s*=%s*")[^"]*(")', '%1' .. next_theme .. '%2')
+            
+            -- 写回文件
+            file = io.open(prefs_file, 'w')
+            if file then
+               file:write(content)
+               file:flush()
+               file:close()
+               
+               wezterm.log_info("✅ 主题已切换为: " .. next_theme)
+               
+               -- 重载配置
+               window:perform_action(act.ReloadConfiguration)
+            end
+         end
+      end),
    },
 }
 

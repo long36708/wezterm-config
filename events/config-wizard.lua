@@ -63,21 +63,30 @@ end
 M.show_theme_selector = function(window)
    if not window then
       window = wezterm.gui.gui_window()
-      if not window then return end
+      if not window then 
+         wezterm.log_error("无法获取窗口")
+         return 
+      end
    end
+   
+   wezterm.log_info("正在打开主题选择器...")
+   
    window:perform_action(act.InputSelector({
       action = wezterm.action_callback(function(win, pane, id, label)
          if label then
+            wezterm.log_info(string.format("选择了主题: %s", label))
             for _, option in ipairs(theme_options) do
                if option.label == label then
                   M.apply_theme(win, option.value)
                   break
                end
             end
+         else
+            wezterm.log_info("取消选择")
          end
       end),
-      title = "选择主题",
-      description = "选择你喜欢的配色方案",
+      title = "🎨 选择主题",
+      description = "使用上下箭头选择，回车确认",
       choices = (function()
          local choices = {}
          for _, opt in ipairs(theme_options) do
@@ -238,16 +247,9 @@ end
 
 --- 注册事件处理器
 M.setup = function()
-   -- 注册命令面板条目
-   wezterm.on('augment-command-palette', function(window, pane)
-      return {
-         {
-            brief = "⚙️ 打开配置向导",
-            icon = "md_settings",
-            action = act.Custom(M.show_main_menu),
-         },
-      }
-   end)
+   -- 注意: augment-command-palette 已移至 command-palette-enhanced.lua 中统一注册
+   -- 这里保留 setup 函数以便兼容,但不再重复注册
+   wezterm.log_info("配置向导模块已加载")
 end
 
 return M
