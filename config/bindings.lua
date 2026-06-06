@@ -129,6 +129,15 @@ local keys = {
    },
 }
 
+-- 添加 Ctrl+数字键 切换标签页 (来自 Blog 文档)
+for i = 1, 8 do
+   table.insert(keys, {
+      key = tostring(i),
+      mods = 'CTRL',
+      action = act.ActivateTab(i - 1),
+   })
+end
+
 local key_tables = {
    resize_font = {
       { key = 'k',      action = act.IncreaseFontSize },

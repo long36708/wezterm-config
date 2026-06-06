@@ -1,7 +1,12 @@
 local wezterm = require('wezterm')
 local colors = require('colors.custom')
+local prefs = require('config.user_preferences')
+local themes = require('config.themes')
 -- local fonts = require('config.fonts')
 local gpus = wezterm.gui.enumerate_gpus()
+
+-- 根据用户偏好选择主题
+local selected_theme = themes[prefs.theme] or themes.gruvbox
 
 return {
    term = 'xterm-256color',
@@ -11,12 +16,12 @@ return {
    front_end = 'WebGpu', -- WebGpu OpenGL
    webgpu_power_preference = 'HighPerformance',
 
-   -- color scheme
-   -- colors = colors,
-   color_scheme = 'Gruvbox dark, medium (base16)',
+   -- color scheme - 根据偏好动态选择
+   color_scheme = selected_theme.color_scheme,
+   colors = selected_theme.colors,
 
    -- background
-   window_background_opacity = 0.95,
+   window_background_opacity = prefs.window_opacity,
    -- win32_system_backdrop = 'Acrylic',
    --background = {
    --   {
@@ -31,7 +36,7 @@ return {
    --},
 
    -- scrollbar
-   enable_scroll_bar = true,
+   enable_scroll_bar = prefs.show_scrollbar,
    min_scroll_bar_height = '3cell',
    colors = {
       scrollbar_thumb = '#454545',
@@ -40,7 +45,7 @@ return {
    -- tab bar
    enable_tab_bar = true,
    hide_tab_bar_if_only_one_tab = false,
-   use_fancy_tab_bar = true,
+   use_fancy_tab_bar = prefs.use_fancy_tab_bar,
    tab_max_width = 25,
    show_tab_index_in_tab_bar = true,
    switch_to_last_active_tab_when_closing_tab = true,
