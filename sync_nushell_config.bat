@@ -78,7 +78,7 @@ echo   Sync Complete!
 echo ========================================
 echo.
 echo Synced files:
-echo   - config.nu (with claude completions enabled)
+echo   - config.nu (with static + dynamic completers)
 echo   - custom-completions/claude/
 echo   - custom-completions/git/
 echo.

@@ -91,6 +91,7 @@ $env.config.show_banner = false;
 $env.config.shell_integration.osc133 = false;
 
 # 命令补全
+# Static completers (extern definitions)
 use ~/AppData/Roaming/nushell/custom-completions/git/git-completions.nu *
 use ~/AppData/Roaming/nushell/custom-completions/claude/claude-completions.nu *
 # use ~/AppData/Roaming/nushell/custom-completions/uv/uv-completions.nu *
@@ -170,6 +171,141 @@ alias inject-tls-secrets = D:\\Python\\python.exe $"($ScriptDir)5.Traffic/tls-de
 alias keyboard = D:\\Python\\python.exe $"($ScriptDir)5.Traffic/USB-Tools/keyboard.py"
 alias mouse = D:\\Python\\python.exe $"($ScriptDir)5.Traffic/USB-Tools/mouse.py"
 
-alias BaseSeries = D:\\Python\\python.exe $"($ScriptDir)BaseSeries/main.py"
+alias BaseSeries = D:\Python\python.exe $"($ScriptDir)BaseSeries/main.py"
 
 alias task = D:\task_windows_amd64\task.exe
+
+# =========================================
+# External Completers (Dynamic)
+# =========================================
+
+# Mise external completer using mise's built-in completion generation
+let mise_external_completer = {|spans: list<string>|
+    # Use mise's native completion support via 'usage'
+    # Format: usage complete-word --shell fish --spec (mise usage) -- ...
+    try {
+        if ($spans | length) <= 1 {
+            # Complete subcommands
+            ^mise help --all 2>$nothing 
+            | lines 
+            | skip 2 
+            | where $it != ""
+            | each {|line|
+                let parts = ($line | split row " " -n 2)
+                {
+                    value: ($parts.0 | str trim),
+                    description: (if ($parts | length) > 1 { $parts.1 } else { "" })
+                }
+            }
+        } else {
+            # For deeper completion, use fish-style completion
+            # This is a workaround until native nushell support is added
+            let completion_str = ($spans | str join " ")
+            ^fish --command $"complete '--do-complete=($completion_str)'"
+            | from tsv --flexible --noheaders --no-infer
+            | rename value description
+            | update value {|row|
+                let val = $row.value
+                # Quote paths if needed
+                if ($val | path exists) {
+                    $'"($val | str replace "\"" "\\\"")"'
+                } else {
+                    $val
+                }
+            }
+        }
+    } catch {
+        # Fallback: return empty if completion fails
+        []
+    }
+}
+
+# UV external completer
+let uv_external_completer = {|spans: list<string>|
+    if ($spans | length) == 1 {
+        let output = (^uv --help 2>$nothing | lines | where $it starts-with "  ")
+        $output | each {|line|
+            let parts = ($line | split row " " -n 2 | where $it != "")
+            if ($parts | length) >= 1 {
+                {
+                    value: ($parts.0 | str trim),
+                    description: (if ($parts | length) > 1 { $parts.1 | str trim } else { "" })
+                }
+            } else {
+                null
+            }
+        } | where $it != null
+    } else {
+        []
+    }
+}
+
+# Multiple completer with Carapace support
+let multi_completer = {|spans: list<string>|
+    # Carapace path - installed at D:\bin\carapace.exe
+    let carapace_path = "D:\\bin\\carapace.exe"
+    
+    match $spans.0 {
+        # Mise: Carapace doesn't support it, use manual completer
+        "mise" => {|s| 
+            if ($s | length) == 1 {
+                # Complete subcommands from mise help
+                try {
+                    ^mise help --all 2>$nothing 
+                    | lines | skip 2 | where $it != ""
+                    | each {|line|
+                        let parts = ($line | split row " " -n 2)
+                        {value: ($parts.0 | str trim), description: (if ($parts | length) > 1 { $parts.1 } else { "" })}
+                    }
+                } catch {
+                    []
+                }
+            } else {
+                # For deeper completion, return empty (mise doesn't support nushell)
+                []
+            }
+        }
+        
+        # UV: Carapace doesn't support it, use manual completer
+        "uv" => {|s|
+            if ($s | length) == 1 {
+                try {
+                    ^uv --help 2>$nothing | lines | where $it starts-with "  "
+                    | each {|line|
+                        let parts = ($line | split row " " -n 2 | where $it != "")
+                        if ($parts | length) >= 1 {
+                            {
+                                value: ($parts.0 | str trim),
+                                description: (if ($parts | length) > 1 { $parts.1 | str trim } else { "" })
+                            }
+                        } else {
+                            null
+                        }
+                    } | where $it != null
+                } catch {
+                    []
+                }
+            } else {
+                []
+            }
+        }
+        
+        # Use Carapace for supported commands
+        "git" | "cargo" | "npm" | "yarn" | "pnpm" | "docker" | "kubectl" | "python" | "pip" | "go" => {|s|
+            try {
+                ^$carapace_path $s.0 nushell ...$s | from json
+            } catch {
+                []
+            }
+        }
+        
+        # Default: no external completion
+        _ => {[]}
+    } | do $in $spans
+}
+
+# Configure external completions
+$env.config.completions.external = {
+    enable: true
+    completer: $multi_completer
+}
