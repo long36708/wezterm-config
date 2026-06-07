@@ -51,16 +51,20 @@ wezterm/
 - <https://github.com/catppuccin/wezterm>
 - <https://github.com/wez/wezterm/discussions/628#discussioncomment-1874614>
 - <https://github.com/wez/wezterm/discussions/628#discussioncomment-5942139>
+- https://github.com/wezterm/wezterm/releases/download/nightly/WezTerm-nightly-setup.exe
+- https://github.com/starship/starship/releases/download/v1.25.1/starship-x86_64-pc-windows-msvc.msi
+- https://github.com/nushell/nushell/releases/download/0.113.1/nu-0.113.1-x86_64-pc-windows-msvc.msi
+- https://github.com/carapace-sh/carapace-bin/releases/download/v1.7.0/carapace-bin_1.7.0_windows_amd64.zip
 
 ## 🛠️ 技术栈
 
 - **配置语言**: Lua (WezTerm 原生配置语言)
 - **字体**: JetBrains Mono Nerd Font
-- **主题**: 
-  - Gruvbox Dark (暖色调复古风格)
-  - Catppuccin Mocha (紫色调现代风格)
-  - Dracula (深蓝色调高对比度)
-  - One Dark (Atom 编辑器风格)
+- **主题**:
+    - Gruvbox Dark (暖色调复古风格)
+    - Catppuccin Mocha (紫色调现代风格)
+    - Dracula (深蓝色调高对比度)
+    - One Dark (Atom 编辑器风格)
 - **图标**: Nerd Fonts (Unicode 特殊字符)
 - **渲染后端**: WebGPU / OpenGL
 
@@ -116,6 +120,7 @@ return {
 #### 🔄 快速切换主题 (三种方式)
 
 **方式1: F2 命令面板 (推荐)** ⭐
+
 ```
 1. 按 F2 打开命令面板
 2. 输入 "gruv" → 选择 "🎨 切换到 Gruvbox"
@@ -123,18 +128,21 @@ return {
 ```
 
 可用选项:
+
 - `🎨 切换到 Gruvbox` - 暖色调复古风格
 - `🎨 切换到 Catppuccin` - 紫色调现代风格
 - `🎨 切换到 Dracula` - 深蓝色调高对比度
 - `🎨 切换到 One Dark` - Atom 编辑器风格
 
 **方式2: 快捷键循环切换**
+
 ```
 按 Ctrl+Shift+T 循环切换主题
 顺序: gruvbox → catppuccin → dracula → one_dark → gruvbox → ...
 ```
 
 **方式3: 修改配置文件**
+
 ```lua
 -- 编辑 config/user_preferences.lua
 theme = "dracula"  -- 修改为你喜欢的主题
@@ -148,13 +156,13 @@ theme = "dracula"  -- 修改为你喜欢的主题
 
 ### 基础操作
 
-| 快捷键            | 功能    |
-|----------------|-------|
-| `Ctrl+C`       | 复制    |
-| `Ctrl+V`       | 粘贴    |
-| `Shift+Insert` | 粘贴    |
-| `F11`          | 全屏切换  |
-| `Ctrl+Shift+R` | 重命名标签 |
+| 快捷键            | 功能           |
+|----------------|--------------|
+| `Ctrl+C`       | 复制           |
+| `Ctrl+V`       | 粘贴           |
+| `Shift+Insert` | 粘贴           |
+| `F11`          | 全屏切换         |
+| `Ctrl+Shift+R` | 重命名标签        |
 | `Ctrl+Shift+T` | **循环切换主题** ⭐ |
 
 > 💡 **提示**: 按 `Ctrl+Shift+T` 可快速在 4 个主题间循环切换
@@ -222,25 +230,25 @@ theme = "dracula"  -- 修改为你喜欢的主题
 
 按 `F2` 后可直接输入关键词快速访问:
 
-| 输入关键词 | 功能                |
-|---------|-------------------|
-| `gruv`  | 🎨 切换到 Gruvbox    |
-| `catp`  | 🎨 切换到 Catppuccin |
-| `drac`  | 🎨 切换到 Dracula    |
-| `one`   | 🎨 切换到 One Dark   |
-| `配置`   | ⚙️ 打开配置向导        |
-| `验证`   | ✅ 验证配置文件        |
+| 输入关键词  | 功能                |
+|--------|-------------------|
+| `gruv` | 🎨 切换到 Gruvbox    |
+| `catp` | 🎨 切换到 Catppuccin |
+| `drac` | 🎨 切换到 Dracula    |
+| `one`  | 🎨 切换到 One Dark   |
+| `配置`   | ⚙️ 打开配置向导         |
+| `验证`   | ✅ 验证配置文件          |
 
 ### 鼠标操作
 
-| 操作          | 功能   |
-|-------------|------|
-| `左键单击`      | 选择文本 |
-| `双击左键`      | 选择单词 |
-| `三击左键`      | 选择整行 |
-| `Ctrl+点击链接` | 打开链接 |
-| `Alt+拖动`    | 窗口拖动 |
-| `滚轮`        | 滚动屏幕 |
+| 操作          | 功能            |
+|-------------|---------------|
+| `左键单击`      | 选择文本          |
+| `双击左键`      | 选择单词          |
+| `三击左键`      | 选择整行          |
+| `Ctrl+点击链接` | 打开链接          |
+| `Alt+拖动`    | 窗口拖动          |
+| `滚轮`        | 滚动屏幕          |
 | **`右键单击`**  | **智能复制/粘贴** ✨ |
 
 > 💡 **提示**: 右键点击时,如果有选中文本则自动复制,否则自动粘贴
