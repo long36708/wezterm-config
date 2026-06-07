@@ -298,8 +298,8 @@ let multi_completer = {|spans: list<string>|
             }
         }
 
-        # Default: no external completion
-        _ => {[]}
+        # Fallback: 未知命令返回空列表，交给 Nushell 内置补全处理
+        _ => {|s| [] }
     } | do $in $spans
 }
 
@@ -308,3 +308,7 @@ $env.config.completions.external = {
     enable: true
     completer: $multi_completer
 }
+
+# Enable file completions in Nushell
+$env.config.completions.algorithm = "fuzzy"
+$env.config.completions.sort = "smart"

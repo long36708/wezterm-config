@@ -64,7 +64,8 @@ wezterm/
 - https://github.com/starship/starship/releases/download/v1.25.1/starship-x86_64-pc-windows-msvc.msi
 - https://github.com/nushell/nushell/releases/download/0.113.1/nu-0.113.1-x86_64-pc-windows-msvc.msi
 - https://github.com/carapace-sh/carapace-bin/releases/download/v1.7.0/carapace-bin_1.7.0_windows_amd64.zip
-
+- https://www.sqlite.org/2026/sqlite-tools-win-x64-3530200.zip
+- 
 ## 🛠️ 技术栈
 
 - **配置语言**: Lua (WezTerm 原生配置语言)
