@@ -113,8 +113,6 @@ def --env "proxy set8083" [] {
     load-env { "HTTP_PROXY": "socks5://127.0.0.1:8083", "HTTPS_PROXY": "socks5://127.0.0.1:8083" }
 }
 
-proxy set
-
 def --env "proxy unset" [] {
     load-env { "HTTP_PROXY": "", "HTTPS_PROXY": "" }
 }
@@ -122,7 +120,7 @@ def --env "proxy unset" [] {
 def "proxy check" [] {
     print "Try to connect to Google..."
     let resp = (curl -I -s --connect-timeout 2 -m 2 -w "%{http_code}" -o /dev/null www.google.com)
-    
+
     if $resp == "200" {
         print "Proxy setup succeeded!"
     } else {
@@ -187,9 +185,9 @@ let mise_external_completer = {|spans: list<string>|
     try {
         if ($spans | length) <= 1 {
             # Complete subcommands
-            ^mise help --all 2>$nothing 
-            | lines 
-            | skip 2 
+            ^mise help --all 2>$nothing
+            | lines
+            | skip 2
             | where $it != ""
             | each {|line|
                 let parts = ($line | split row " " -n 2)
@@ -245,14 +243,14 @@ let uv_external_completer = {|spans: list<string>|
 let multi_completer = {|spans: list<string>|
     # Carapace path - installed at D:\bin\carapace.exe
     let carapace_path = "D:\\bin\\carapace.exe"
-    
+
     match $spans.0 {
         # Mise: Carapace doesn't support it, use manual completer
-        "mise" => {|s| 
+        "mise" => {|s|
             if ($s | length) == 1 {
                 # Complete subcommands from mise help
                 try {
-                    ^mise help --all 2>$nothing 
+                    ^mise help --all 2>$nothing
                     | lines | skip 2 | where $it != ""
                     | each {|line|
                         let parts = ($line | split row " " -n 2)
@@ -266,7 +264,7 @@ let multi_completer = {|spans: list<string>|
                 []
             }
         }
-        
+
         # UV: Carapace doesn't support it, use manual completer
         "uv" => {|s|
             if ($s | length) == 1 {
@@ -290,7 +288,7 @@ let multi_completer = {|spans: list<string>|
                 []
             }
         }
-        
+
         # Use Carapace for supported commands
         "git" | "cargo" | "npm" | "yarn" | "pnpm" | "docker" | "kubectl" | "python" | "pip" | "go" => {|s|
             try {
@@ -299,7 +297,7 @@ let multi_completer = {|spans: list<string>|
                 []
             }
         }
-        
+
         # Default: no external completion
         _ => {[]}
     } | do $in $spans
