@@ -12,16 +12,25 @@ echo Source: %SOURCE%
 echo Target: %TARGET%
 echo.
 
-REM Step 1: Add claude completions to config.nu if not exists
-echo [Step 1] Checking config.nu for claude completions...
+REM Step 1: Add completions to config.nu if not exists
+echo [Step 1] Checking config.nu for completions...
+
+REM Check and add claude completions
 findstr /C:"custom-completions/claude/claude-completions.nu" "%SOURCE%\config.nu" >nul 2>&1
 if errorlevel 1 (
     echo [INFO] Adding claude completions to config.nu...
-    
-    REM Use PowerShell to insert the line after git completions
     powershell -Command "$content = Get-Content '%SOURCE%\config.nu' -Encoding UTF8; $newLine = 'use ~/AppData/Roaming/nushell/custom-completions/claude/claude-completions.nu *'; $index = $content.IndexOf('use ~/AppData/Roaming/nushell/custom-completions/git/git-completions.nu *'); if ($index -ge 0) { $content = $content[0..$index] + $newLine + $content[($index+1)..($content.Length-1)]; $content | Set-Content '%SOURCE%\config.nu' -Encoding UTF8; Write-Host '[OK] Added claude completions line' } else { Write-Host '[WARN] Could not find git completions line' }"
 ) else (
     echo [OK] Claude completions already in config.nu
+)
+
+REM Check and add mise completions
+findstr /C:"custom-completions/mise/mise-completions.nu" "%SOURCE%\config.nu" >nul 2>&1
+if errorlevel 1 (
+    echo [INFO] Adding mise completions to config.nu...
+    powershell -Command "$content = Get-Content '%SOURCE%\config.nu' -Encoding UTF8; $newLine = 'use ~/AppData/Roaming/nushell/custom-completions/mise/mise-completions.nu *'; $index = $content.IndexOf('use ~/AppData/Roaming/nushell/custom-completions/claude/claude-completions.nu *'); if ($index -ge 0) { $content = $content[0..$index] + $newLine + $content[($index+1)..($content.Length-1)]; $content | Set-Content '%SOURCE%\config.nu' -Encoding UTF8; Write-Host '[OK] Added mise completions line' } else { Write-Host '[WARN] Could not find claude completions line' }"
+) else (
+    echo [OK] Mise completions already in config.nu
 )
 echo.
 
@@ -60,6 +69,14 @@ if exist "%SOURCE%\custom-completions\git" (
     echo [WARN] Git completions not found
 )
 
+REM Copy mise completions
+if exist "%SOURCE%\custom-completions\mise" (
+    robocopy "%SOURCE%\custom-completions\mise" "%TARGET%\custom-completions\mise" /E /NFL /NDL /NJH /NJS
+    echo [OK] Mise completions synced
+) else (
+    echo [WARN] Mise completions not found
+)
+
 echo.
 echo [Step 3] Syncing config.nu...
 echo.
@@ -81,6 +98,7 @@ echo Synced files:
 echo   - config.nu (with static + dynamic completers)
 echo   - custom-completions/claude/
 echo   - custom-completions/git/
+echo   - custom-completions/mise/
 echo.
 echo Tip: Restart Nushell or run 'source-env $env.NU_LIB_DIRS.0/config.nu'
 echo.

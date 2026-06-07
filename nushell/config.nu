@@ -94,6 +94,7 @@ $env.config.shell_integration.osc133 = false;
 # Static completers (extern definitions)
 use ~/AppData/Roaming/nushell/custom-completions/git/git-completions.nu *
 use ~/AppData/Roaming/nushell/custom-completions/claude/claude-completions.nu *
+use ~/AppData/Roaming/nushell/custom-completions/mise/mise-completions.nu *
 # use ~/AppData/Roaming/nushell/custom-completions/uv/uv-completions.nu *
 
 # 定义别名和目录常量
