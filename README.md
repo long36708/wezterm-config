@@ -38,6 +38,10 @@ wezterm/
 ├── utils/                   # 工具函数
 │   ├── math.lua            # 数学工具
 │   └── platform.lua        # 平台检测(Win/Mac/Linux)
+├── nushell/                 # Nushell 补全和脚本
+│   ├── custom-completions/ # 自定义命令补全
+│   │   └── git/            # Git 补全
+│   └── COMPLETIONS_GUIDE.md # 补全资源指南
 └── backdrops/              # 背景图片
 ```
 
