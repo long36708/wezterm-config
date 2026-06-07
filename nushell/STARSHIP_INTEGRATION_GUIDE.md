@@ -13,21 +13,25 @@ Starship 是一个快速、可定制且跨 shell 的提示符工具。本文档�
 #### Windows 安装方法
 
 **方法 1: 使用 Scoop（推荐）**
+
 ```powershell
 scoop install starship
 ```
 
 **方法 2: 使用 Winget**
+
 ```powershell
 winget install starship
 ```
 
 **方法 3: 手动安装**
+
 1. 从 [GitHub Releases](https://github.com/starship/starship/releases) 下载最新版本
 2. 解压到合适目录（如 `C:\Program Files\starship\`）
 3. 将目录添加到 PATH 环境变量
 
 #### 验证安装
+
 ```nushell
 starship --version
 ```
@@ -48,13 +52,21 @@ mkdir ($nu.data-dir | path join "vendor/autoload")
 starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
 ```
 
+Pastel Powerline Preset
+
+```shell
+starship preset pastel-powerline -o ~/.config/starship.toml
+```
+
 **优点**:
+
 - ✅ 自动化配置，无需手动编辑 config.nu
 - ✅ Starship 会自动加载
 - ✅ 符合 Nushell 最佳实践
 - ✅ 易于维护和更新
 
 **验证**:
+
 ```nushell
 # 检查文件是否创建成功
 ls ($nu.data-dir | path join "vendor/autoload/starship.nu")
@@ -105,9 +117,11 @@ $env.config.shell_integration.osc133 = false
 ### 创建配置文件
 
 Starship 配置文件位置：
+
 - **Windows**: `~/.config/starship.toml` 或 `%USERPROFILE%\.config\starship.toml`
 
 创建配置文件：
+
 ```powershell
 # 创建配置目录
 mkdir $env:USERPROFILE\.config
@@ -323,6 +337,7 @@ style = "bold blue"
 ### 重新加载配置
 
 **如果你使用方法 1（自动初始化）**:
+
 ```nushell
 # 只需重启 Nushell
 exit
@@ -330,6 +345,7 @@ exit
 ```
 
 **如果你使用方法 2（手动配置）**:
+
 ```nushell
 # 重新加载配置文件
 source-env $env.NU_LIB_DIRS.0/config.nu
@@ -415,6 +431,7 @@ use_os_path_sep = true
 **症状**: `starship: command not found`
 
 **解决方案**:
+
 ```powershell
 # 检查是否已安装
 where starship
@@ -431,6 +448,7 @@ $env:PATH | Select-String starship
 **症状**: 修改配置后 prompt 没有变化
 
 **解决方案**:
+
 ```nushell
 # 重新加载配置
 source-env $env.NU_LIB_DIRS.0/config.nu
@@ -444,6 +462,7 @@ exit
 **症状**: Prompt 显示缓慢
 
 **解决方案**:
+
 ```toml
 # ~/.config/starship.toml
 
@@ -463,6 +482,7 @@ disabled = true
 **症状**: 特殊字符显示异常
 
 **解决方案**:
+
 1. 确保终端支持 UTF-8
 2. 安装 nerd fonts 字体
 3. 配置 WezTerm 使用支持 emoji 的字体
@@ -501,6 +521,7 @@ config.font = wezterm.font('JetBrainsMono Nerd Font')
 ## 📝 更新日志
 
 ### 2026-06-07
+
 - 初始版本
 - 添加安装指南
 - 添加配置示例

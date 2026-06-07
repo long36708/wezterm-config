@@ -22,8 +22,10 @@ local keys = {
    { key = 'F12',    mods = 'NONE',        action = act.ShowDebugOverlay },
    { key = 'f',      mods = mod.SUPER,     action = act.Search({ CaseInSensitiveString = '' }) },
 
-   -- copy/paste -- 2024年1月10日09:33:20 本身的快捷键有点儿问题 因此做个改动
-   { key = 'c',      mods = 'CTRL',        action = act.CopyTo('Clipboard') },
+   -- copy/paste -- 
+   -- 注意: Ctrl+C 保持默认行为(发送 SIGINT 中断信号),不使用复制功能
+   -- 使用 Ctrl+Shift+C 复制,避免与中断信号冲突
+   { key = 'c',      mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
    { key = 'v',      mods = 'CTRL',        action = act.PasteFrom('Clipboard') },
    { key = 'Insert', mods = 'SHIFT',       action = act.PasteFrom('Clipboard') },
 

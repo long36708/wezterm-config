@@ -13,6 +13,8 @@
 - 💻 **跨平台支持**: 自动适配 Windows/macOS/Linux
 - 🎯 **自定义标签栏**: 显示进程名、管理员标识、未读提醒
 - 🚀 **WebGPU 渲染**: 高性能图形加速
+- 📦 **Nushell 集成**: 完整的命令补全系统 (Git/Claude/Mise)
+- ✨ **Starship Prompt**: 美观的跨 Shell 提示符
 
 ![screenshot](./screenshots/screenshot-1.png)
 
@@ -40,9 +42,16 @@ wezterm/
 │   └── platform.lua        # 平台检测(Win/Mac/Linux)
 ├── nushell/                 # Nushell 补全和脚本
 │   ├── custom-completions/ # 自定义命令补全
-│   │   └── git/            # Git 补全
-│   └── COMPLETIONS_GUIDE.md # 补全资源指南
-└── backdrops/              # 背景图片
+│   │   ├── git/            # Git 补全
+│   │   ├── claude/         # Claude Code 补全
+│   │   └── mise/           # Mise 工具管理器补全
+│   ├── config.nu           # Nushell 配置文件
+│   ├── COMPLETIONS_GUIDE.md # 补全资源指南
+│   ├── MISE_COMPLETIONS_GUIDE.md # Mise 补全开发指南
+│   └── STARSHIP_INTEGRATION_GUIDE.md # Starship 集成指南
+├── backdrops/              # 背景图片
+├── sync_to_user.bat        # WezTerm 配置同步脚本
+└── sync_nushell_config.bat # Nushell 配置同步脚本
 ```
 
 ## 相关链接
@@ -156,16 +165,19 @@ theme = "dracula"  -- 修改为你喜欢的主题
 
 ### 基础操作
 
-| 快捷键            | 功能           |
-|----------------|--------------|
-| `Ctrl+C`       | 复制           |
-| `Ctrl+V`       | 粘贴           |
-| `Shift+Insert` | 粘贴           |
-| `F11`          | 全屏切换         |
-| `Ctrl+Shift+R` | 重命名标签        |
-| `Ctrl+Shift+T` | **循环切换主题** ⭐ |
+| 快捷键            | 功能               |
+|----------------|------------------|
+| `Ctrl+C`       | **终止命令** (SIGINT) |
+| `Ctrl+Shift+C` | 复制               |
+| `Ctrl+V`       | 粘贴               |
+| `Shift+Insert` | 粘贴               |
+| `F11`          | 全屏切换             |
+| `Ctrl+Shift+R` | 重命名标签            |
+| `Ctrl+Shift+Y` | **循环切换主题** ⭐    |
 
-> 💡 **提示**: 按 `Ctrl+Shift+T` 可快速在 4 个主题间循环切换
+> 💡 **重要**: `Ctrl+C` 已恢复为标准的终止信号功能，不再用于复制
+> 
+> 💡 **提示**: 按 `Ctrl+Shift+Y` 可快速在 4 个主题间循环切换
 
 ### 标签页管理
 
@@ -177,6 +189,11 @@ theme = "dracula"  -- 修改为你喜欢的主题
 | `Alt+]` 或 `Alt+l` 或 `Alt+→` | 切换到下一个标签           |
 | `Alt+Ctrl+[`                | 向左移动标签             |
 | `Alt+Ctrl+]`                | 向右移动标签             |
+| `Ctrl+T`                    | 新建标签页 (Chrome 风格)  |
+| `Ctrl+W`                    | 关闭标签页 (Chrome 风格)  |
+| `Ctrl+Tab`                  | 下一个标签页             |
+| `Ctrl+Shift+Tab`            | 上一个标签页             |
+| `Ctrl+1~8`                  | 切换到第 1-8 个标签页      |
 
 ### 窗格管理
 
@@ -252,3 +269,41 @@ theme = "dracula"  -- 修改为你喜欢的主题
 | **`右键单击`**  | **智能复制/粘贴** ✨ |
 
 > 💡 **提示**: 右键点击时,如果有选中文本则自动复制,否则自动粘贴
+
+---
+
+## 🐚 Nushell 集成
+
+本项目包含完整的 Nushell 配置和命令补全系统。
+
+### 📦 命令补全
+
+已集成的补全模块:
+- ✅ **Git** - 完整的 Git 命令补全
+- ✅ **Claude Code** - Claude CLI 补全
+- ✅ **Mise** - 多语言工具管理器补全 (100+ 命令)
+
+查看完整文档:
+- [补全使用指南](nushell/COMPLETIONS_GUIDE.md)
+- [Mise 补全开发指南](nushell/MISE_COMPLETIONS_GUIDE.md)
+
+### ✨ Starship Prompt
+
+支持 Starship 跨 Shell 提示符集成:
+- 自动初始化 (Nushell v0.96+)
+- 美观的 Git 状态显示
+- 语言版本自动检测
+- 高度可定制的主题
+
+查看完整文档:
+- [Starship 集成指南](nushell/STARSHIP_INTEGRATION_GUIDE.md)
+
+### 🔄 配置同步
+
+```powershell
+# 同步 Nushell 配置到用户目录
+.\sync_nushell_config.bat
+
+# 同步 WezTerm 配置到用户目录
+.\sync_to_user.bat
+```
